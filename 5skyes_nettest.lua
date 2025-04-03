@@ -8,7 +8,9 @@
 -- notice must always be retained in all copies or derivative works. This software is provided "as-is," without warranty
 -- of any kind. You can read the full license at https://github.com/apoxhu/MA3_lua_snippets/blob/main/LICENSE.md
 
--- Usage: command -a arg --args .... etc. This is esentially just command line injection.
+-- Usage: Install this plugin into your MA3... Copy it in as text, or load the actual plug. More soon.
+--  Provide the plug with the IP and port of your resolume's REST api.
+-- Description: This is esentially just command line injection via shell/bash/batch files. Streams in thumbnails using REST.
 
 -- Function to run a command asynchronously.
 -- The function will return an object with several functions to get result lines, get the state, or free the object. It is currently not implemented to stop a running executable.
@@ -95,28 +97,28 @@ function cmdAsync(cmd)
 end
 
 return function(display, usr_command)
-usr_command = usr_command or TextInput("Enter command")
-if usr_command == nil or usr_command == "" then
-    return
-end
-Printf("Running " .. usr_command .. "...")
-local command = usr_command
-local cmdObj = cmdAsync(command)
-local result
+    usr_command = usr_command or TextInput("Enter command")
+    if usr_command == nil or usr_command == "" then
+        return
+    end
+    Printf("Running " .. usr_command .. "...")
+    local command = usr_command
+    local cmdObj = cmdAsync(command)
+    local result
 
--- UI preparation for displaying ping result
-Timer(function()
-    -- put MessageBox in Timer so it won't block
-    MessageBox({
-        title = "Running " .. usr_command,
-        message = " "
-    })
-end, 0, 1)
+    -- UI preparation for displaying ping result
+    Timer(function()
+        -- put MessageBox in Timer so it won't block
+        MessageBox({
+            title = "Running " .. usr_command,
+            message = " "
+        })
+    end, 0, 1)
 
-coroutine.yield(0.1)
-local texts = {}
+    coroutine.yield(0.1)
+    local texts = {}
 
-for i = 1, #GetDisplayCollect() do
+    for i = 1, #GetDisplayCollect() do
     local _display = GetDisplayCollect()[i]
     if _display ~= nil then
         local msgBox = _display:FindRecursive('MsgBox')
